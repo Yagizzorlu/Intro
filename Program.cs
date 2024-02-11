@@ -1,5 +1,5 @@
-﻿// See https://aka.ms/new-console-template for more information
-using Intro.Business;
+﻿using Intro.Business;
+using Intro.DataAccess.Concretes;
 using Intro.Entities;
 
 Console.WriteLine("Hello, World!");
@@ -62,11 +62,60 @@ for (int i = 0; i < courses.Length; i++)
     Console.WriteLine("Kurs İsmi ve Fiyatı : " + courses[i].Name + " " +  courses[i].Price);
 }
 
-CourseManager courseManager = new CourseManager();
-Course[] courses2 = courseManager.GetAll();     //courses2,veri kaynağından GetAll komutu ile geliyor.
-for (int i = 0; i < courses.Length; i++)
+CourseManager courseManager = new CourseManager(new DapperCourseDal());
+List<Course> courses2 = courseManager.GetAll();     //courses2,veri kaynağından GetAll komutu ile geliyor.
+for (int i = 0; i < courses2.Count; i++)    //Liste olunca count oluyor. Array olunca length.
 {
     Console.WriteLine("Kurs İsmi ve Fiyatı : " + courses2[i].Name + " " + courses2[i].Price);  //Bu ikinci yazdığımız tarzda veri kaynağından geliyor kurslar.
 }
 
 Console.WriteLine("Kod bitti");
+
+IndividualCustomer individualCustomer = new IndividualCustomer();
+individualCustomer.Id = 1;
+individualCustomer.NationalIdentity = "12345678922";
+individualCustomer.FirstName = "Yağız";
+individualCustomer.LastName = "Zorlu";
+individualCustomer.CustomerNumber = "123456";
+
+IndividualCustomer individualCustomer2 = new IndividualCustomer();
+individualCustomer2.Id = 2;
+individualCustomer2.NationalIdentity = "56478965412";
+individualCustomer2.FirstName = "Metehan";
+individualCustomer2.LastName = "Kaya";
+individualCustomer2.CustomerNumber = "123457";
+
+CorporateCustomer corporateCustomer = new CorporateCustomer();
+corporateCustomer.Id = 3;
+corporateCustomer.Name = "Kodlama.io";
+corporateCustomer.CustomerNumber = "654778";
+corporateCustomer.TaxNumber = "12345678987";
+
+CorporateCustomer corporateCustomer2 = new CorporateCustomer();
+corporateCustomer2.Id = 4;
+corporateCustomer2.Name = "Abc";
+corporateCustomer2.CustomerNumber = "654779";
+corporateCustomer2.TaxNumber = "12345678985";
+
+int number1 = 10;
+int number2 = 20;
+number1 = number2;
+number2 = 50;  //Number2 nin yaşadığı değişim number1 i etkilemiyor.Çünkü değer tiptir int. Cevap 20 dir.
+Console.WriteLine(number1);
+
+string[] cities1 = { "Ankara", "İstanbul", "İzmir" };
+string[] cities2 = { "Bursa", "Bolu", "Diyarbakır" };
+
+cities2 = cities1;
+cities1[0] = "Adana";    
+
+Console.WriteLine(cities2[0]);  //Cevap Adana'dır.Çünkü cities1 ve cities2 aynı adrese bakıyor. Diziler referans tiptir.
+
+BaseCustomer[] baseCustomers = { individualCustomer, individualCustomer2, corporateCustomer, corporateCustomer2 };
+
+//polymorphism
+foreach (BaseCustomer customer in baseCustomers)
+{ 
+    Console.WriteLine(customer.CustomerNumber);
+}
+
